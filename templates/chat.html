@@ -4,106 +4,157 @@
     <title>BioQuery – Medical Chatbot</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}"/>
 </head>
 
 <body>
 
-    <!-- Ambient background particles -->
-    <div class="bg-layer">
-        <div class="helix helix-1"></div>
-        <div class="helix helix-2"></div>
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-        <div class="cross-grid"></div>
-    </div>
-
-    <div class="container-fluid h-100">
-        <div class="row justify-content-center h-100 align-items-center">
-            <div class="col-md-8 col-xl-6 col-lg-7 chat-wrap">
-
-                <!-- Header / Branding -->
-                <div class="bq-header">
-                    <div class="bq-brand">
-                        <div class="bq-logo-ring">
-                            <div class="bq-logo-inner">
-                                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="bq-icon">
-                                    <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="1.5"/>
-                                    <path d="M20 11v18M11 20h18" stroke="url(#grad1)" stroke-width="2.5" stroke-linecap="round"/>
-                                    <circle cx="20" cy="20" r="4" fill="url(#grad1)" opacity="0.7"/>
-                                    <defs>
-                                        <linearGradient id="grad1" x1="0" y1="0" x2="40" y2="40">
-                                            <stop offset="0%" stop-color="#6ee7d0"/>
-                                            <stop offset="100%" stop-color="#3a9bdc"/>
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-                            </div>
-                            <div class="bq-pulse-ring"></div>
-                        </div>
-                        <div class="bq-title-block">
-                            <h1 class="bq-name">BioQuery</h1>
-                            <p class="bq-tagline">Your medical library, in a single chat</p>
-                        </div>
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="bq-brand">
+                <div class="bq-logo-ring">
+                    <div class="bq-logo-inner">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="bq-icon">
+                            <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="1.5"/>
+                            <path d="M20 11v18M11 20h18" stroke="url(#grad1)" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="20" cy="20" r="4" fill="url(#grad1)" opacity="0.7"/>
+                            <defs>
+                                <linearGradient id="grad1" x1="0" y1="0" x2="40" y2="40">
+                                    <stop offset="0%" stop-color="#6ee7d0"/>
+                                    <stop offset="100%" stop-color="#3a9bdc"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
                     </div>
-                    <div class="bq-status-pill">
-                        <span class="status-dot"></span> Online
-                    </div>
+                    <div class="bq-pulse-ring"></div>
                 </div>
+                <span class="bq-name">BioQuery</span>
+            </div>
 
-                <!-- Chat Card -->
-                <div class="bq-card">
-                    <!-- Messages Body -->
-                    <div id="messageFormeight" class="bq-messages">
-                        <!-- Welcome message -->
-                        <div class="d-flex justify-content-start mb-4 msg-entry">
-                            <div class="bq-avatar-wrap">
-                                <img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="bq-avatar bot-avatar">
-                            </div>
-                            <div class="bq-bubble bot-bubble">
-                                Hello! I'm <strong>BioQuery</strong>, your intelligent medical assistant. I can help you understand symptoms, medications, conditions, and more. How can I assist you today?
-                                <span class="bq-time">just now</span>
-                            </div>
-                        </div>
-                    </div>
+            <button class="new-chat-btn" onclick="newChat()">
+                <i class="fas fa-plus"></i>
+                <span>New Chat</span>
+            </button>
+        </div>
 
-                    <!-- Divider -->
-                    <div class="bq-divider"></div>
-
-                    <!-- Input Footer -->
-                    <div class="bq-footer">
-                        <form id="messageArea" class="bq-input-row">
-                            <div class="bq-input-wrap">
-                                <i class="fas fa-stethoscope bq-input-icon"></i>
-                                <input type="text" id="text" name="msg"
-                                    placeholder="Ask a medical question…"
-                                    autocomplete="off" class="bq-input" required/>
-                            </div>
-                            <button type="submit" id="send" class="bq-send-btn">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
-                        <p class="bq-disclaimer">BioQuery provides general information only. Always consult a licensed physician.</p>
-                    </div>
+        <div class="sidebar-history">
+            <p class="history-label">Recent</p>
+            <div id="historyList">
+                <div class="history-item active">
+                    <i class="fas fa-comment-medical"></i>
+                    <span>General Consultation</span>
                 </div>
-
             </div>
         </div>
-    </div>
+
+        <div class="sidebar-bottom">
+            <div class="bq-status-pill">
+                <span class="status-dot"></span>
+                <span>Online</span>
+            </div>
+            <p class="bq-disclaimer">BioQuery provides general information only. Always consult a licensed physician.</p>
+        </div>
+    </aside>
+
+    <!-- ═══ TOGGLE SIDEBAR (mobile) ═══ -->
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="main-content">
+
+        <!-- Ambient background -->
+        <div class="bg-layer">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+            <div class="cross-grid"></div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="messages-area" id="messageFormeight">
+
+            <!-- Welcome / empty state -->
+            <div class="welcome-state" id="welcomeState">
+                <div class="welcome-icon">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad2)" stroke-width="1.5"/>
+                        <path d="M20 11v18M11 20h18" stroke="url(#grad2)" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="20" cy="20" r="4" fill="url(#grad2)" opacity="0.7"/>
+                        <defs>
+                            <linearGradient id="grad2" x1="0" y1="0" x2="40" y2="40">
+                                <stop offset="0%" stop-color="#6ee7d0"/>
+                                <stop offset="100%" stop-color="#3a9bdc"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h2 class="welcome-title">How can I help you today?</h2>
+                <p class="welcome-sub">Ask me about symptoms, medications, conditions, or general health questions.</p>
+                <div class="suggestion-chips">
+                    <button class="chip" onclick="fillSuggestion(this)">What are symptoms of diabetes?</button>
+                    <button class="chip" onclick="fillSuggestion(this)">How does ibuprofen work?</button>
+                    <button class="chip" onclick="fillSuggestion(this)">Explain hypertension</button>
+                    <button class="chip" onclick="fillSuggestion(this)">Common cold vs flu differences</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Input Bar -->
+        <div class="input-bar-wrap">
+            <div class="input-bar">
+                <form id="messageArea" class="input-form">
+                    <div class="input-inner">
+                        <i class="fas fa-stethoscope input-icon"></i>
+                        <textarea
+                            id="text"
+                            name="msg"
+                            placeholder="Ask a medical question…"
+                            autocomplete="off"
+                            rows="1"
+                            class="chat-input"
+                            required></textarea>
+                        <button type="submit" id="send" class="send-btn">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <p class="bottom-disclaimer">BioQuery provides general health information only — not a substitute for professional medical advice.</p>
+        </div>
+
+    </main>
 
     <script>
         $(document).ready(function () {
+
+            // Auto-grow textarea
+            const textarea = document.getElementById('text');
+            textarea.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 160) + 'px';
+            });
+
+            // Submit on Enter (Shift+Enter for newline)
+            textarea.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    $('#messageArea').trigger('submit');
+                }
+            });
+
             function getTime() {
                 const d = new Date();
                 let h = d.getHours(), m = d.getMinutes();
                 const ampm = h >= 12 ? 'PM' : 'AM';
                 h = h % 12 || 12;
-                return h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
+                return h + ':' + (m < 10 ? '0' : m) + ' ' + ampm;
             }
 
             $("#messageArea").on("submit", function (event) {
@@ -111,32 +162,38 @@
                 const rawText = $("#text").val().trim();
                 if (!rawText) return;
 
+                // Hide welcome state
+                $('#welcomeState').fadeOut(200, function() { $(this).remove(); });
+
                 const time = getTime();
 
-                // User bubble
+                // User message
                 const userHtml = `
-                    <div class="d-flex justify-content-end mb-4 msg-entry">
-                        <div class="bq-bubble user-bubble">
-                            ${rawText}
-                            <span class="bq-time">${time}</span>
+                    <div class="msg-row user-row msg-entry">
+                        <div class="msg-content user-content">
+                            <div class="msg-bubble user-bubble">${escapeHtml(rawText)}</div>
+                            <span class="msg-time">${time}</span>
                         </div>
-                        <div class="bq-avatar-wrap">
-                            <img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="bq-avatar user-avatar">
+                        <div class="msg-avatar user-avatar-wrap">
+                            <img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="avatar-img">
                         </div>
                     </div>`;
 
                 $("#text").val("");
+                textarea.style.height = 'auto';
                 $("#messageFormeight").append(userHtml);
                 scrollBottom();
 
                 // Typing indicator
                 const typingHtml = `
-                    <div class="d-flex justify-content-start mb-4 msg-entry typing-indicator-wrap">
-                        <div class="bq-avatar-wrap">
-                            <img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="bq-avatar bot-avatar">
+                    <div class="msg-row bot-row msg-entry typing-row">
+                        <div class="msg-avatar bot-avatar-wrap">
+                            <img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="avatar-img bot-img">
                         </div>
-                        <div class="bq-bubble bot-bubble typing-bubble">
-                            <span></span><span></span><span></span>
+                        <div class="msg-content bot-content">
+                            <div class="msg-bubble bot-bubble typing-bubble">
+                                <span></span><span></span><span></span>
+                            </div>
                         </div>
                     </div>`;
                 $("#messageFormeight").append(typingHtml);
@@ -147,30 +204,35 @@
                     type: "POST",
                     url: "/get",
                 }).done(function (data) {
-                    $(".typing-indicator-wrap").remove();
+                    $(".typing-row").remove();
                     const botHtml = `
-                        <div class="d-flex justify-content-start mb-4 msg-entry">
-                            <div class="bq-avatar-wrap">
-                                <img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="bq-avatar bot-avatar">
+                        <div class="msg-row bot-row msg-entry">
+                            <div class="msg-avatar bot-avatar-wrap">
+                                <img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="avatar-img bot-img">
                             </div>
-                            <div class="bq-bubble bot-bubble">
-                                ${data}
-                                <span class="bq-time">${time}</span>
+                            <div class="msg-content bot-content">
+                                <div class="msg-bubble bot-bubble">${data}</div>
+                                <span class="msg-time">${time}</span>
                             </div>
                         </div>`;
                     $("#messageFormeight").append($.parseHTML(botHtml));
                     scrollBottom();
-                }).fail(function(jqXHR, textStatus, errorThrown) {
-                    $(".typing-indicator-wrap").remove();
+
+                    // Add to sidebar history
+                    addHistory(rawText);
+                }).fail(function(jqXHR) {
+                    $(".typing-row").remove();
                     const errorMsg = jqXHR.responseText || "Connection lost. Please check your backend.";
                     const botHtml = `
-                        <div class="d-flex justify-content-start mb-4 msg-entry">
-                            <div class="bq-avatar-wrap">
-                                <img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="bq-avatar bot-avatar">
+                        <div class="msg-row bot-row msg-entry">
+                            <div class="msg-avatar bot-avatar-wrap">
+                                <img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="avatar-img bot-img">
                             </div>
-                            <div class="bq-bubble bot-bubble" style="background: rgba(220, 53, 69, 0.2); border-color: #dc3545;">
-                                <strong style="color: #ff6b6b;">Error:</strong> ${errorMsg}
-                                <span class="bq-time">${time}</span>
+                            <div class="msg-content bot-content">
+                                <div class="msg-bubble bot-bubble error-bubble">
+                                    <strong>Error:</strong> ${errorMsg}
+                                </div>
+                                <span class="msg-time">${time}</span>
                             </div>
                         </div>`;
                     $("#messageFormeight").append($.parseHTML(botHtml));
@@ -180,9 +242,37 @@
 
             function scrollBottom() {
                 const el = document.getElementById("messageFormeight");
-                el.scrollTop = el.scrollHeight;
+                el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+            }
+
+            function escapeHtml(text) {
+                return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            }
+
+            let historyCount = 0;
+            function addHistory(text) {
+                if (historyCount > 0) return; // only once per session for demo
+                historyCount++;
+                const short = text.length > 28 ? text.substring(0, 28) + '…' : text;
+                $('#historyList .history-item').removeClass('active');
+                const item = `<div class="history-item active"><i class="fas fa-comment-medical"></i><span>${short}</span></div>`;
+                $('#historyList').prepend(item);
             }
         });
+
+        function fillSuggestion(el) {
+            const text = el.textContent;
+            document.getElementById('text').value = text;
+            document.getElementById('text').focus();
+        }
+
+        function newChat() {
+            location.reload();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
     </script>
 </body>
 </html>

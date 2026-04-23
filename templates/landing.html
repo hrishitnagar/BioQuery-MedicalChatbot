@@ -7,9 +7,116 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='landing.css')}}"/>
+ 
+    <!-- Auth button styles (add to landing.css if you prefer) -->
+    <style>
+        /* ── Top-right Auth Buttons ── */
+        .auth-nav {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+ 
+        .nav-btn {
+            height: 36px;
+            padding: 0 18px;
+            border-radius: 18px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+ 
+        .nav-btn-login {
+            background: rgba(10, 22, 34, 0.75);
+            border: 1px solid rgba(78, 232, 200, 0.3);
+            color: #4de8cc;
+            backdrop-filter: blur(12px);
+        }
+        .nav-btn-login:hover {
+            border-color: rgba(78, 232, 200, 0.65);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(78, 232, 200, 0.15);
+            text-decoration: none;
+        }
+ 
+        .nav-btn-signup {
+            background: linear-gradient(135deg, #1a8c7a, #2ab5a0);
+            border: none;
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(42, 181, 160, 0.35);
+        }
+        .nav-btn-signup:hover {
+            background: linear-gradient(135deg, #2aa896, #3ac8dc);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(42, 181, 160, 0.5);
+            color: #fff;
+            text-decoration: none;
+        }
+ 
+        /* If user is logged in, show username pill */
+        .nav-user-pill {
+            height: 36px;
+            padding: 0 16px;
+            border-radius: 18px;
+            background: rgba(10, 22, 34, 0.75);
+            border: 1px solid rgba(78, 232, 200, 0.25);
+            color: #4de8cc;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-user-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #4de8cc;
+            box-shadow: 0 0 8px #4de8cc;
+        }
+ 
+        .nav-btn-logout {
+            height: 36px;
+            padding: 0 16px;
+            border-radius: 18px;
+            background: rgba(255, 80, 80, 0.1);
+            border: 1px solid rgba(255, 80, 80, 0.25);
+            color: #ff8a8a;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .nav-btn-logout:hover {
+            background: rgba(255, 80, 80, 0.2);
+            border-color: rgba(255, 80, 80, 0.5);
+            color: #fff;
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-
+ 
     <div class="bg-layer">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
@@ -22,10 +129,37 @@
         <div class="float-cross fc-3">✚</div>
         <div class="float-cross fc-4">✚</div>
     </div>
-
+ 
+    <!-- ── Auth Navigation (top-right) ── -->
+    <nav class="auth-nav">
+        {% if session.get('user_id') %}
+            <!-- Logged-in state: show username + logout -->
+            <div class="nav-user-pill">
+                <div class="nav-user-dot"></div>
+                {{ session.get('username', 'User') }}
+            </div>
+            <a href="{{ url_for('logout') }}" class="nav-btn-logout">Sign Out</a>
+        {% else %}
+            <!-- Logged-out state: show login + signup -->
+            <a href="{{ url_for('login') }}" class="nav-btn nav-btn-login">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+                </svg>
+                Log In
+            </a>
+            <a href="{{ url_for('signup') }}" class="nav-btn nav-btn-signup">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                </svg>
+                Sign Up
+            </a>
+        {% endif %}
+    </nav>
+ 
     <div class="lp-container">
         <div class="lp-content">
-
+ 
             <div class="lp-icon-wrap">
                 <div class="lp-icon">
                     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +177,7 @@
                 <div class="icon-ring r1"></div>
                 <div class="icon-ring r2"></div>
             </div>
-
+ 
             <div class="bq-sign" id="signboard">
                 <span class="bq-letter">B</span>
                 <span class="bq-letter">i</span>
@@ -54,28 +188,29 @@
                 <span class="bq-letter">r</span>
                 <span class="bq-letter">y</span>
             </div>
-
+ 
             <p class="lp-tagline">Your medical library, in a single chat</p>
-
+ 
             <a href="{{ url_for('index') }}" class="gs-btn">
                 <svg class="gs-icon" viewBox="0 0 20 20" fill="none">
                     <circle cx="10" cy="10" r="9" stroke="#4de8cc" stroke-width="1.2"/>
-                    <path d="M10 5v10M5 10h10" stroke="#4de8cc" stroke-width="1.8" stroke-linecap="round"/>
+                    <path d="M10 5v10" stroke="#4de8cc" stroke-width="1.8" stroke-linecap="round"/>
+                    <path d="M5 10h10" stroke="#4de8cc" stroke-width="1.8" stroke-linecap="round"/>
                 </svg>
                 Get Started
             </a>
-
+ 
             <div class="pulse-bar"></div>
-
+ 
         </div>
     </div>
-
+ 
     <script>
         (function () {
             const letters = document.querySelectorAll('.bq-letter');
             const total = letters.length;
             let cycleCount = 0;
-
+ 
             function runSign() {
                 letters.forEach(l => l.classList.remove('lit'));
                 let i = 0;
@@ -101,10 +236,10 @@
                 }
                 light();
             }
-
+ 
             setTimeout(runSign, 700);
         })();
     </script>
-
+ 
 </body>
 </html>
