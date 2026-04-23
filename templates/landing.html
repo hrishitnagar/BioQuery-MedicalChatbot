@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BioQuery</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='landing.css')}}"/>
+</head>
+<body>
+
+    <div class="bg-layer">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-bg"></div>
+        <div class="dna-line dl-1"></div>
+        <div class="dna-line dl-2"></div>
+        <div class="float-cross fc-1">✚</div>
+        <div class="float-cross fc-2">✚</div>
+        <div class="float-cross fc-3">✚</div>
+        <div class="float-cross fc-4">✚</div>
+    </div>
+
+    <div class="lp-container">
+        <div class="lp-content">
+
+            <div class="lp-icon-wrap">
+                <div class="lp-icon">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="21" stroke="url(#ig)" stroke-width="1.5"/>
+                        <path d="M24 13v22M13 24h22" stroke="url(#ig)" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="24" cy="24" r="5" fill="url(#ig)" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="ig" x1="0" y1="0" x2="48" y2="48">
+                                <stop offset="0%" stop-color="#6ee7d0"/>
+                                <stop offset="100%" stop-color="#3a9bdc"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="icon-ring r1"></div>
+                <div class="icon-ring r2"></div>
+            </div>
+
+            <div class="bq-sign" id="signboard">
+                <span class="bq-letter">B</span>
+                <span class="bq-letter">i</span>
+                <span class="bq-letter">o</span>
+                <span class="bq-letter">Q</span>
+                <span class="bq-letter">u</span>
+                <span class="bq-letter">e</span>
+                <span class="bq-letter">r</span>
+                <span class="bq-letter">y</span>
+            </div>
+
+            <p class="lp-tagline">Your medical library, in a single chat</p>
+
+            <a href="{{ url_for('index') }}" class="gs-btn">
+                <svg class="gs-icon" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="10" r="9" stroke="#4de8cc" stroke-width="1.2"/>
+                    <path d="M10 5v10M5 10h10" stroke="#4de8cc" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                Get Started
+            </a>
+
+            <div class="pulse-bar"></div>
+
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const letters = document.querySelectorAll('.bq-letter');
+            const total = letters.length;
+            let cycleCount = 0;
+
+            function runSign() {
+                letters.forEach(l => l.classList.remove('lit'));
+                let i = 0;
+                function light() {
+                    if (i < total) {
+                        letters[i].classList.add('lit');
+                        i++;
+                        setTimeout(light, 115);
+                    } else {
+                        setTimeout(() => {
+                            letters.forEach(l => l.classList.remove('lit'));
+                            setTimeout(() => {
+                                cycleCount++;
+                                if (cycleCount < 3) {
+                                    runSign();
+                                } else {
+                                    cycleCount = 0;
+                                    setTimeout(runSign, 2600);
+                                }
+                            }, 420);
+                        }, 650);
+                    }
+                }
+                light();
+            }
+
+            setTimeout(runSign, 700);
+        })();
+    </script>
+
+</body>
+</html>

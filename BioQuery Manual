@@ -1,0 +1,69 @@
+# BioQuery: Medical Chatbot Project Manual
+
+## 1. Project Overview
+**BioQuery** is an intelligent medical chatbot application that leverages Retrieval-Augmented Generation (RAG) to provide accurate answers based on trusted medical literature. The application features a high-end, clinical-themed user interface with a seamless flow from a landing page to a dedicated chat environment.
+
+---
+
+## 2. Technology Stack
+
+### Backend
+- **Python 3.13 (Anaconda)**: The core programming environment.
+- **Flask**: A lightweight WSGI web application framework used for routing and serving the application.
+- **LangChain 0.3.x**: The orchestration framework used to connect LLMs, vector databases, and prompts.
+- **Dotenv**: For secure management of API keys and environment variables.
+
+### Artificial Intelligence & Data
+- **Google Gemini**: The Large Language Model (LLM) used for generating human-like, medically grounded responses.
+- **Pinecone (Serverless)**: A high-performance vector database used to store and retrieve document embeddings.
+- **Hugging Face (all-MiniLM-L6-v2)**: Open-source embeddings used to convert text chunks into numerical vectors.
+
+### Frontend
+- **HTML5 & CSS3**: Custom "BioQuery" design system featuring dark modes, ambient orbs, and glassmorphism.
+- **jQuery/AJAX**: For asynchronous communication between the chat interface and the Flask backend.
+
+---
+
+## 3. Implementation Workflow
+
+### Phase 1: Knowledge Base Indexing (`store_index.py`)
+1.  **Document Loading**: Loads PDF files from the `data/` directory using `PyPDFDirectoryLoader`.
+2.  **Text Splitting**: Uses `RecursiveCharacterTextSplitter` to break large medical documents into smaller chunks (500 characters) with overlap to preserve context.
+3.  **Embedding Generation**: Converts each text chunk into a 384-dimensional vector using Hugging Face models.
+4.  **Vector Storage**: Upserts these vectors into a Pinecone index for fast retrieval.
+
+### Phase 2: Application Logic (`app.py`)
+1.  **Environment Initialization**: Loads API keys and initializes the Flask server.
+2.  **Retriever Setup**: Connects to the existing Pinecone index to perform similarity searches on user queries.
+3.  **Chain Construction**: Combines the LLM (Gemini), the retriever, and the System Prompt into a unified LangChain `retrieval_chain`.
+
+---
+
+## 4. LangChain AI: The RAG Mechanism Explained
+
+**RAG (Retrieval-Augmented Generation)** is the heart of BioQuery. It solves the problem of "Hallucination" by forcing the AI to look at real documents before answering.
+
+### The 4-Step RAG Cycle:
+1.  **Query Transformation**: When you type a question, it is converted into a vector (the same format as the stored data).
+2.  **Similarity Search**: BioQuery searches Pinecone for the **Top 3 most relevant segments** of text related to your question.
+3.  **Context Injection**: These segments are "stuffed" into a prompt alongside your question.
+4.  **Grounded Generation**: The Gemini model reads the injected context and answers *only* based on that information. If the answer isn't in the data, it says "I don't know" rather than making it up.
+
+### Key LangChain Components:
+-   `create_stuff_documents_chain`: This component takes all retrieved documents and passes them to the LLM.
+-   `create_retrieval_chain`: This manages the entire flow from user input to final output.
+
+---
+
+## 5. UI Features
+-   **Dynamic Signboard**: Animated "BioQuery" branding on the landing page.
+-   **Ambient Background**: SVG DNA helices and floating medical crosses for a professional feel.
+-   **Responsive Chat**: Mobile-friendly design with typing indicators and real-time error handling.
+-   **Clean Typography**: Uses *Cormorant Garamond* for titles and *DM Sans* for body text.
+
+---
+
+## 6. Security & Best Practices
+-   **Environment Separation**: API keys are never hardcoded; they are stored in `.env`.
+-   **Error Handling**: The frontend handles backend failures (like API limits) and notifies the user gracefully.
+-   **Scalability**: The use of Pinecone Serverless allows the knowledge base to grow to millions of documents without performance degradation.
