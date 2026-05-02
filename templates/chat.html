@@ -154,7 +154,7 @@
                 let h = d.getHours(), m = d.getMinutes();
                 const ampm = h >= 12 ? 'PM' : 'AM';
                 h = h % 12 || 12;
-                return h + ':' + (m < 10 ? '0' : m) + ' ' + ampm;
+                return h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
             }
 
             $("#messageArea").on("submit", function (event) {

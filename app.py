@@ -34,7 +34,7 @@ app = Flask(__name__)
 
 # Change this to a long random string in production!
 # Generate one with: python -c "import secrets; print(secrets.token_hex(32))"
-app.secret_key = os.environ.get('SECRET_KEY', 'change-this-to-a-random-secret-in-production')
+app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
 
 bcrypt = Bcrypt(app)
 
@@ -59,7 +59,7 @@ docsearch  = PineconeVectorStore.from_existing_index(
 
 retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
-chatModel = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+chatModel = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 prompt = ChatPromptTemplate.from_messages(
     [
         ("system", system_prompt),
@@ -72,7 +72,9 @@ rag_chain             = create_retrieval_chain(retriever, question_answer_chain)
 
 
 # ── SQLite database ───────────────────────────────────────────────────────────
-DATABASE = 'bioquery.db'
+DATA_DIR = os.environ.get("DATA_DIR", ".")
+os.makedirs(DATA_DIR, exist_ok=True)
+DATABASE = os.path.join(DATA_DIR, 'bioquery.db')
 
 
 def get_db():
@@ -246,7 +248,13 @@ def chat():
         return f"Error: {str(e)}", 500
 
 
+@app.route("/health")
+def health():
+    return {"status": "ok"}, 200
+
+
 # ── Run ───────────────────────────────────────────────────────────────────────
-if __name__ == '__main__':
+if __name__ == "__main__":
     init_db()       # Creates bioquery.db + users table on first run
-    app.run(host="0.0.0.0", port=8080, debug=True, use_reloader=False)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port, debug=False)

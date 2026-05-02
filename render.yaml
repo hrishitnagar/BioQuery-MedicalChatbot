@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: bioquery
+    runtime: python
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: bioquery-data
+      mountPath: /var/data
+      sizeGB: 1
