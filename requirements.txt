@@ -5,7 +5,7 @@ bcrypt
 flask-bcrypt
 pypdf
 langchain==0.3.7
-langchain-core==0.3.19
+langchain-core==0.3.34
 langchain-community==0.3.7
 langchain-google-genai==2.0.4
 langchain-pinecone==0.2.13
